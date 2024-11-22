@@ -60,7 +60,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'settings',
         name: 'settings',
-        component: () => import('@/views/account/SettingsView.vue'),
+        component: () => import('@/views/SettingsView.vue'),
         beforeEnter(_to, _from, next) {
           setPageTitle('Settings')
           next()
