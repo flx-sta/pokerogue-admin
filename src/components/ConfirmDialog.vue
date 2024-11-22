@@ -5,6 +5,7 @@ interface ConfirmDialogProps {
   confirmLabel?: string
   cancelLabel?: string
   icon?: string
+  maxWidth?: string | number
 }
 
 const show = defineModel<boolean>()
@@ -19,7 +20,7 @@ const {
 </script>
 
 <template>
-  <v-dialog v-model="show" persistent width="auto">
+  <v-dialog v-model="show" persistent width="auto" :max-width="maxWidth">
     <v-card :prepend-icon="icon" :title="title" :text="text">
       <template v-slot:actions>
         <v-spacer></v-spacer>

@@ -6,8 +6,11 @@ import { formatDate, formatNumber } from '@/utils'
 import { computed, reactive, ref } from 'vue'
 import type { VDataTable } from 'vuetify/components'
 import ConfirmDialog from './ConfirmDialog.vue'
+import { useStore } from '@nanostores/vue'
+import { $settings } from '@/stores/settingsStore'
 
 const dailyRunsApi = useDailyRunsApi(import.meta.env.VITE_API_BASE)
+const settings = useStore($settings)
 
 const loadingDelay = 250
 const loading = reactive({
@@ -41,12 +44,10 @@ const confirmDialog = reactive({
 const showConfirmDialog = computed(() => itemTo.delete !== null || itemTo.restore !== null)
 
 function startLoading() {
-  console.log('startLoading', loading.timeout, loading.status)
   loading.timeout = setTimeout(() => (loading.status = true), loadingDelay)
 }
 
 function endLoading() {
-  console.log('endLoading', loading.timeout, loading.status)
   if (loading.timeout !== -1) {
     clearTimeout(loading.timeout)
   }
@@ -113,7 +114,7 @@ async function handleConfirmDelete() {
 
 function handleRestoreRequest(run: DailyRun) {
   confirmDialog.title = `Restore run for ${run.username} on ${run.date}?`
-  confirmDialog.text = `Are you sure you want to restore<br>run for ${run.username} on ${run.date}?`
+  confirmDialog.text = `Are you sure you want to restore run for ${run.username} on ${run.date}?`
   itemTo.restore = run
 }
 
@@ -180,7 +181,13 @@ async function handleConfirmRestore() {
       <v-icon v-if="item.deleted" @click="toggleExpand(internalItem)"> mdi-chevron-down </v-icon>
     </template>
     <template v-slot:expanded-row="{ columns, item }">
-      <tr class="bg-grey-darken-3 text-caption">
+      <tr
+        :class="{
+          'bg-grey-darken-3': settings.theme === 'dark',
+          'bg-grey-lighten-3': settings.theme === 'light',
+          'text-caption': true,
+        }"
+      >
         <td :colspan="columns.length" class="pl-12">
           <v-row class="ma-1">
             <v-col :cols="3">Deleted by (Discord ID):</v-col>
@@ -192,7 +199,9 @@ async function handleConfirmRestore() {
           </v-row>
           <v-row class="ma-1">
             <v-col :cols="3">Deleted at:</v-col>
-            <v-col :cols="5">{{ item.deletedAt }}</v-col>
+            <v-col :cols="5" :title="item.deletedAt">{{
+              item.deletedAt ? formatDate(item.deletedAt) : 'n/a'
+            }}</v-col>
           </v-row>
         </td>
       </tr>
@@ -234,6 +243,7 @@ async function handleConfirmRestore() {
 
   <!-- Dialogs -->
   <ConfirmDialog
+    max-width="400"
     :title="confirmDialog.title"
     :text="confirmDialog.text"
     v-model="showConfirmDialog"

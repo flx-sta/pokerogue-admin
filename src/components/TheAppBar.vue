@@ -5,6 +5,7 @@ import { $pageTitle } from '@/stores/pageTitleStore'
 import { $user } from '@/stores/userStore'
 import { setCookie } from '@/utils'
 import { useStore } from '@nanostores/vue'
+import logoPng from '@/assets/images/pokerogue-logo.png'
 
 const pageTitle = useStore($pageTitle)
 const user = useStore($user)
@@ -18,7 +19,14 @@ function handleLogout() {
 <template>
   <v-app-bar :elevation="2">
     <template v-slot:prepend>
-      <v-app-bar-nav-icon disabled></v-app-bar-nav-icon>
+      <v-img
+        :src="logoPng"
+        max-height="32"
+        max-width="32"
+        min-width="32"
+        min-height="32"
+        class="ml-2 rounded-circle"
+      />
     </template>
 
     <v-app-bar-title>{{ pageTitle }}</v-app-bar-title>
