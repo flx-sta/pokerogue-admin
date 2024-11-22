@@ -21,10 +21,14 @@ const page = ref(1)
 const itemsPerPage = ref(10)
 const expandedRows = ref<string[]>([])
 const headers: VDataTable['$props']['headers'] = [
-  { title: 'Username', key: 'username', sortable: true },
-  { title: 'Date', key: 'date', sortable: true },
-  { title: 'Score', key: 'score', sortable: true },
-  { title: 'Wave', key: 'wave', sortable: true },
+  {
+    title: 'Username',
+    key: 'username',
+    sortable: false,
+  },
+  { title: 'Date', key: 'date', sortable: false },
+  { title: 'Score', key: 'score', sortable: false },
+  { title: 'Wave', key: 'wave', sortable: false },
   { title: 'Actions', key: 'actions', sortable: false },
 ]
 const computedItemsPerPageOptions = computed(() => [
