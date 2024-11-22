@@ -19,20 +19,22 @@ function handleLogout() {
 <template>
   <v-app-bar :elevation="2">
     <template v-slot:prepend>
-      <v-img
-        :src="logoPng"
-        max-height="32"
-        max-width="32"
-        min-width="32"
-        min-height="32"
-        class="ml-2 rounded-circle"
-      />
+      <router-link :to="{ name: 'dashboard.home' }">
+        <v-img
+          :src="logoPng"
+          max-height="32"
+          max-width="32"
+          min-width="32"
+          min-height="32"
+          class="ml-2 rounded-circle"
+        />
+      </router-link>
     </template>
 
     <v-app-bar-title>{{ pageTitle }}</v-app-bar-title>
 
     <template v-slot:append>
-      <v-menu v-if="$route.name !== 'login'">
+      <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn :icon="AVATAR_ICON" variant="text" v-bind="props"></v-btn>
         </template>
