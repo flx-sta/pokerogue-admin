@@ -1,0 +1,5 @@
+export const DELETE_ICON = 'mdi-delete'
+export const DELETE_RESTORE_ICON = 'mdi-delete-restore'
+export const NO_ICON = 'mdi-close'
+export const YES_ICON = 'mdi-check'
+export const AUTH_COOKIE = 'pokerogue_admin_access_token'
