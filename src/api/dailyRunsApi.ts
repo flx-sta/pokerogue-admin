@@ -53,15 +53,13 @@ export function useDailyRunsApi(base: string) {
 
     async restoreDeletedDailyRun(username: string, date: string) {
       try {
-        const response = await fetch(
-          `${base}/daily/runs/restore?username=${username}&date=${date}`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: getCookie(AUTH_COOKIE),
-            },
+        const response = await fetch(`${base}/daily/runs/restore`, {
+          method: 'POST',
+          body: new URLSearchParams({ username, date }),
+          headers: {
+            Authorization: getCookie(AUTH_COOKIE),
           },
-        )
+        })
         if (response.ok) {
           const resData: SuccessResponse = await response.json()
 

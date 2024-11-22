@@ -2,6 +2,6 @@ import { createApp } from 'vue'
 
 import App from '@/App.vue'
 import { vuetify } from '@/plugins/vuetify'
-import router from '@/router'
+import router from '@/router/router'
 
 createApp(App).use(router).use(vuetify).mount('#app')

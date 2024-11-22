@@ -1,21 +1,22 @@
 <script setup lang="ts">
+import { useStore } from '@nanostores/vue'
 import { RouterView } from 'vue-router'
-import TheAppBar from '@/components/TheAppBar.vue'
+import { $settings } from './stores/settingsStore'
+
+const settings = useStore($settings)
 </script>
 
 <template>
-  <v-app theme="dark">
+  <v-app :theme="settings.theme">
     <v-main>
-      <TheAppBar />
-      <RouterView class="a-AppContent" />
+      <RouterView />
     </v-main>
   </v-app>
 </template>
 
-<style scoped>
-.a-AppContent {
-  padding: 1rem;
-  min-width: 100%;
-  min-height: 100%;
+<style>
+html,
+body {
+  background: #000000;
 }
 </style>

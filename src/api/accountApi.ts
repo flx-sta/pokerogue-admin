@@ -1,16 +1,33 @@
 import { AUTH_COOKIE } from '@/constants'
 import type { LoginResponse } from '@/types/LoginResponse'
-import { setCookie } from '@/utils'
+import type { User } from '@/types/User'
+import { getCookie, setCookie } from '@/utils'
 
 export function useAccountApi(base: string) {
   return {
-    async login(username: string, password: string) {
-      const formData = new URLSearchParams({ username, password })
+    async info(): Promise<User | undefined> {
+      try {
+        const response = await fetch(`${base}/account/info`, {
+          method: 'GET',
+          headers: {
+            Authorization: `${getCookie(AUTH_COOKIE)}`,
+          },
+        })
+        if (response.ok) {
+          return await response.json()
+        } else {
+          console.warn('Failed to get info', response)
+        }
+      } catch (err) {
+        console.error('Error getting info:', err)
+      }
+    },
 
+    async login(username: string, password: string) {
       try {
         const response = await fetch(`${base}/account/login`, {
           method: 'POST',
-          body: formData.toString(),
+          body: new URLSearchParams({ username, password }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },

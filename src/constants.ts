@@ -1,7 +1,9 @@
 export const DELETE_ICON = 'mdi-delete'
 export const RESTORE_ICON = 'mdi-delete-restore'
-export const NO_ICON = 'mdi-close'
-export const YES_ICON = 'mdi-check'
-export const DETAILS_ICON = 'mdi-clipboard-search-outline'
+export const AVATAR_ICON = 'mdi-account'
+export const LOGOUT_ICON = 'mdi-logout'
+export const SETTINGS_ICON = 'mdi-cog-outline'
 
 export const AUTH_COOKIE = 'pokerogue_admin_access_token'
+
+export const SETTINGS_KEY = 'pokerogue_admin_dashboard_settings'

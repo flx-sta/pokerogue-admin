@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { LoginResponse } from 'src/types/LoginResponse'
 import { ref } from 'vue'
-import router from '@/router'
+import router from '@/router/router'
 import { setCookie } from '@/utils'
 import { AUTH_COOKIE } from '@/constants'
 
@@ -11,7 +11,8 @@ const loginFailed = ref(false)
 const username = ref('')
 const password = ref('')
 
-const handleLogin = async () => {
+const handleLogin = async (event: Event) => {
+  event.preventDefault() //stop actual submit!
   const formData = new URLSearchParams({
     username: username.value,
     password: password.value,
@@ -57,38 +58,40 @@ const handleLogin = async () => {
     <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
       <div class="text-subtitle-1 text-medium-emphasis">Account</div>
 
-      <v-text-field
-        v-model="username"
-        density="compact"
-        placeholder="Username"
-        prepend-inner-icon="mdi-account-outline"
-        variant="outlined"
-      ></v-text-field>
+      <v-form @submit="handleLogin">
+        <v-text-field
+          v-model="username"
+          density="compact"
+          placeholder="Username"
+          prepend-inner-icon="mdi-account-outline"
+          variant="outlined"
+        ></v-text-field>
 
-      <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-        Password
-      </div>
+        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+          Password
+        </div>
 
-      <v-text-field
-        v-model="password"
-        :append-inner-icon="hidePassword ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="hidePassword ? 'password' : 'text'"
-        density="compact"
-        placeholder="Enter your password"
-        prepend-inner-icon="mdi-lock-outline"
-        variant="outlined"
-        @click:append-inner="hidePassword = !hidePassword"
-      ></v-text-field>
+        <v-text-field
+          v-model="password"
+          :append-inner-icon="hidePassword ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="hidePassword ? 'password' : 'text'"
+          density="compact"
+          placeholder="Enter your password"
+          prepend-inner-icon="mdi-lock-outline"
+          variant="outlined"
+          @click:append-inner="hidePassword = !hidePassword"
+        ></v-text-field>
 
-      <v-alert type="warning" class="mb-8">
-        <strong>This platform is only for administrators!</strong><br />
-        If you still decide to try logging in as a normal user, the administrators will be notified
-        of your attempt and approrpriate action will be taken.<br />
-        <strong>Consider yourself warned!</strong>
-      </v-alert>
-      <v-btn class="mb-1" color="blue" size="large" variant="tonal" block @click="handleLogin">
-        Log In
-      </v-btn>
+        <v-alert type="warning" class="mb-8">
+          <strong>This platform is only for administrators!</strong><br />
+          If you still decide to try logging in as a normal user, the administrators will be
+          notified of your attempt and approrpriate action will be taken.<br />
+          <strong>Consider yourself warned!</strong>
+        </v-alert>
+        <v-btn class="mb-1" color="blue" size="large" variant="tonal" block type="submit">
+          Log In
+        </v-btn>
+      </v-form>
       <v-alert v-if="loginFailed" type="error"> Check your credentials and try again. </v-alert>
     </v-card>
   </v-dialog>
