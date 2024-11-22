@@ -1,25 +1,31 @@
 <script setup lang="ts">
 import { useDailyRunsApi } from '@/api/dailyRunsApi'
+import { useConfirmDialog } from '@/compositions/useConfirmDialog'
+import { usePaginatedServerTable } from '@/compositions/usePaginatedServerTable'
 import { DELETE_ICON, RESTORE_ICON } from '@/constants'
+import { $settings } from '@/stores/settingsStore'
 import type { DailyRun, DailyRunWithId } from '@/types/DailyRun'
 import { formatDate, formatNumber } from '@/utils'
+import { useStore } from '@nanostores/vue'
 import { computed, reactive, ref } from 'vue'
 import type { VDataTable } from 'vuetify/components'
 import ConfirmDialog from './ConfirmDialog.vue'
-import { useStore } from '@nanostores/vue'
-import { $settings } from '@/stores/settingsStore'
 
 const dailyRunsApi = useDailyRunsApi(import.meta.env.VITE_API_BASE)
 const settings = useStore($settings)
 
-const loadingDelay = 250
-const loading = reactive({
-  status: false,
-  timeout: -1,
-})
-const page = ref(1)
-const itemsPerPage = ref(10)
-const expandedRows = ref<string[]>([])
+const {
+  page,
+  itemsPerPage,
+  expandedRows,
+  loading,
+  itemsLength,
+  itemsPerPageOptions,
+  startLoading,
+  stopLoading,
+} = usePaginatedServerTable()
+const confirmDialog = useConfirmDialog()
+
 const headers: VDataTable['$props']['headers'] = [
   {
     title: 'Username',
@@ -31,33 +37,15 @@ const headers: VDataTable['$props']['headers'] = [
   { title: 'Wave', key: 'wave', sortable: false },
   { title: 'Actions', key: 'actions', sortable: false },
 ]
-const computedItemsPerPageOptions = computed(() => [
-  10,
-  ...[25, 50, 100].filter((i) => i <= itemsLength.value),
-])
-const items = ref<DailyRunWithId[]>([])
-const itemsLength = ref(-1)
+
+const items = ref<DailyRunWithId[]>(
+  Array.from({ length: itemsPerPage.value }).map(() => ({}) as any),
+)
 const itemTo = reactive<{ delete: DailyRun | null; restore: DailyRun | null }>({
   delete: null,
   restore: null,
 })
-const confirmDialog = reactive({
-  title: '',
-  text: '',
-})
 const showConfirmDialog = computed(() => itemTo.delete !== null || itemTo.restore !== null)
-
-function startLoading() {
-  loading.timeout = setTimeout(() => (loading.status = true), loadingDelay)
-}
-
-function endLoading() {
-  if (loading.timeout !== -1) {
-    clearTimeout(loading.timeout)
-  }
-
-  loading.status = false
-}
 
 async function loadItems(limit: number, page: number) {
   startLoading()
@@ -66,13 +54,11 @@ async function loadItems(limit: number, page: number) {
   if (items.value.length < itemsPerPage.value) {
     items.value = [
       ...items.value,
-      ...Array.from({ length: itemsPerPage.value - items.value.length }).map(
-        (r) => ({}) as unknown as DailyRunWithId,
-      ),
+      ...Array.from({ length: itemsPerPage.value - items.value.length }).map(() => ({}) as any),
     ]
   }
   itemsLength.value = total
-  endLoading()
+  stopLoading()
 }
 
 function handleConfirm() {
@@ -157,11 +143,11 @@ async function handleConfirmRestore() {
     :items="items"
     :items-length="itemsLength"
     :loading="loading.status"
-    :items-per-page-options="computedItemsPerPageOptions"
+    :items-per-page-options="itemsPerPageOptions"
     :cell-props="
       (cell) =>
         cell.item.deleted && headers.some((h) => h.key === cell.column.key)
-          ? { class: 'text-error' }
+          ? { class: 'text-disabled' }
           : {}
     "
     @update:options="loadItems(itemsPerPage, page)"
