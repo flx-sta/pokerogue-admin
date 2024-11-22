@@ -7,3 +7,7 @@ export interface DailyRun {
   deletedAt: string | null
   deletedByDiscordId: string | null
 }
+
+export interface DailyRunWithId extends DailyRun {
+  id: string
+}

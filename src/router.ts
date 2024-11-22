@@ -26,7 +26,7 @@ const router = createRouter({
           name: 'daily.rankings',
           component: () => import('./views/daily/DailyRankingsView.vue'),
           beforeEnter(_to, _from, next) {
-            setTitle('Manage Daily Rankings')
+            setTitle('Manage Daily Runs')
             next()
           },
         },
