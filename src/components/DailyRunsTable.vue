@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useDailyRunsApi } from '@/api/dailyRunsApi'
 import { useConfirmDialog } from '@/compositions/useConfirmDialog'
+import { useLoading } from '@/compositions/useLoading'
 import { usePaginatedServerTable } from '@/compositions/usePaginatedServerTable'
 import { DELETE_ICON, RESTORE_ICON } from '@/constants'
 import { $settings } from '@/stores/settingsStore'
@@ -14,16 +15,9 @@ import ConfirmDialog from './ConfirmDialog.vue'
 const dailyRunsApi = useDailyRunsApi(import.meta.env.VITE_API_BASE)
 const settings = useStore($settings)
 
-const {
-  page,
-  itemsPerPage,
-  expandedRows,
-  loading,
-  itemsLength,
-  itemsPerPageOptions,
-  startLoading,
-  stopLoading,
-} = usePaginatedServerTable()
+const { page, itemsPerPage, expandedRows, itemsLength, itemsPerPageOptions } =
+  usePaginatedServerTable()
+const { isLoading, startLoading, stopLoading } = useLoading()
 const confirmDialog = useConfirmDialog()
 
 const headers: VDataTable['$props']['headers'] = [
@@ -142,7 +136,7 @@ async function handleConfirmRestore() {
     :headers="headers"
     :items="items"
     :items-length="itemsLength"
-    :loading="loading.status"
+    :loading="isLoading"
     :items-per-page-options="itemsPerPageOptions"
     :cell-props="
       (cell) =>

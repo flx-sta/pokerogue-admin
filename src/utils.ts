@@ -22,12 +22,22 @@ export function setCookie(name: string, value: string): void {
 }
 
 export function formatDate(
-  date: string | Date,
+  date?: string | Date | null,
   options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' },
 ): string {
+  if (!date) return 'n/a'
   return new Date(date).toLocaleDateString($settings.get().locale, options)
 }
 
 export function formatNumber(n: number, options: Intl.NumberFormatOptions = {}): string {
   return new Intl.NumberFormat($settings.get().locale, options).format(n)
+}
+
+export function debounce(fn: (...args: unknown[]) => void, delay = 300) {
+  let timeout = -1
+
+  return (...args: unknown[]) => {
+    window.clearTimeout(timeout)
+    timeout = window.setTimeout(() => fn(...args), delay)
+  }
 }

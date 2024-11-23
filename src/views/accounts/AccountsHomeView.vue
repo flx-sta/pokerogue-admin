@@ -3,9 +3,9 @@
 <template>
   <div class="a-DailyHomeView">
     <v-card
-      title="Manage Daily Runs"
-      subtitle="Manage them all!"
-      :to="{ name: 'daily.runs' }"
+      title="Search Accounts"
+      subtitle="Search them all!"
+      :to="{ name: 'accounts.search' }"
       variant="elevated"
       class="mx-auto"
       max-width="344"

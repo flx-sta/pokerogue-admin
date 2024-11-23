@@ -58,6 +58,36 @@ export const routes: RouteRecordRaw[] = [
         ],
       },
       {
+        path: 'accounts',
+        name: 'accounts',
+        meta: {
+          crumb: 'Accounts',
+        },
+        children: [
+          {
+            path: '',
+            name: 'accounts.home',
+            component: () => import('@/views/accounts/AccountsHomeView.vue'),
+            beforeEnter(_to, _from, next) {
+              setPageTitle('Accounts')
+              next()
+            },
+          },
+          {
+            path: '/search',
+            name: 'accounts.search',
+            meta: {
+              crumb: 'Search',
+            },
+            component: () => import('@/views/accounts/AccountsSearchView.vue'),
+            beforeEnter(_to, _from, next) {
+              setPageTitle('Search Accounts')
+              next()
+            },
+          },
+        ],
+      },
+      {
         path: 'settings',
         name: 'settings',
         component: () => import('@/views/SettingsView.vue'),
@@ -83,5 +113,9 @@ export const routes: RouteRecordRaw[] = [
         next()
       }
     },
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/',
   },
 ]
